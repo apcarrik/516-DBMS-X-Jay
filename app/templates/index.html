@@ -10,6 +10,7 @@
     <tr>
       <th scope="col">Product ID</th>
       <th scope="col">Product Name</th>
+      <th scope="col">Image</th>
       <th scope="col">Price</th>
     </tr>
   </thead>
@@ -18,6 +19,7 @@
       <tr>
         <th scope="row">{{product.id}}</th>
         <td>{{product.name}}</td>
+        <td><img src="static/images/{{ product.id }}.png" alt='no product image.' width="256" height="256" /></td>
         <td>{{product.price}}</td>
       </tr>
     {% endfor %}
