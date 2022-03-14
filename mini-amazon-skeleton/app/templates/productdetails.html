@@ -2,7 +2,26 @@
 
 {% block content %}
 <br><br>
-Product Details page.
-Product Id: {{pid}}
+<h2>Products Details:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Product ID</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Image</th>
+      <th scope="col">Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for product in avail_products%}
+      <tr>
+        <th scope="row">{{product.id}}</th>
+        <td>{{product.name}}<br></td>
+        <td><img src="{{url_for('static', filename='images/'+product.id|string+'.png')}}" alt='no product image.' width="256" height="256" /></td>
+        <td>{{product.price}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
 {% endblock %}
