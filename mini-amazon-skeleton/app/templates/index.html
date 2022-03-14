@@ -18,7 +18,7 @@
     {% for product in avail_products%}
       <tr>
         <th scope="row">{{product.id}}</th>
-        <td>{{product.name}}</td>
+        <td>{{product.name}}<br><a href="{{ url_for('products.details', pid = product.id) }}" class="btn btn-primary btn-lg" role="button">Product Details</a></td>
         <td><img src="static/images/{{ product.id }}.png" alt='no product image.' width="256" height="256" /></td>
         <td>{{product.price}}</td>
       </tr>
@@ -27,7 +27,7 @@
 </table>
 
 <br><br>
-{% if current_user.is_authenticated %}
+{% if current_user.is_authenticated %}products
 <h2>Your recent purchases:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
