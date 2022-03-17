@@ -5,7 +5,29 @@
 <br><br>
 
 <h2>Your Inventory:</h2>
-
-
+  <table class='table table-hover table-bordered container'>
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Product ID</th>
+        <th scope="col">Product Name</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Price</th>
+        <th scope="col">Remove from Inventory</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in range(inventory_products|length) %}
+        <tr>
+          <th scope="row">{{ inventory_products[i].pid }}</th>
+          <td>{{ names[i] }}</td>
+          <td>{{ inventory_products[i].quantity }}</td>
+          <td>{{ inventory_products[i].price }}</td>
+          <td><a href="{{ '/remove_from_inventory/' + inventory_products[i].pid|string }}">Remove</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+    <a href="{{ url_for('inventory.change_inventory') }}">Make Changes</a></br>
+    <a href="{{ url_for('inventory.add_to_inventory') }}">Add Product to Inventory</a>
 
 {% endblock %}

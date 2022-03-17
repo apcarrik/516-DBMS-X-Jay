@@ -117,3 +117,4 @@ def editProfile():
             return redirect(url_for('users.profile'))
     
     return render_template('editProfile.html',title='edit profile_title',userinfo=info,form=form)
+    

@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, flash, request
+from werkzeug.urls import url_parse
 from flask_login import current_user
 from flask_wtf import FlaskForm, Form
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, DecimalField, FormField, FieldList
@@ -24,14 +25,18 @@ class InventoryForm(FlaskForm):
 class InventoryListForm(FlaskForm):
     forms = FieldList(FormField(InventoryForm))
 
-@bp.route('/inventory', methods = ['GET','POST'])
-def showinventory():
+@bp.route('/inventory', methods = ['GET'])
+def inventory():
     if not current_user.is_authenticated:
         return redirect(url_for('users.login'))
+    inventories = Inventory.get_all_by_sid(current_user.id)
 
+    names = [Product.get(invent.pid).name for invent in inventories]
 
-    return render_template('inventory.html')
-
+    return render_template('inventory.html',
+                           inventory_products=inventories,
+                           names = names)
+    
 @bp.route('/change_inventory', methods = ['GET', 'POST'])
 def change_inventory():
     if not current_user.is_authenticated:
