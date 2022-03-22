@@ -108,6 +108,23 @@ RETURNING id
             return None
             
     @staticmethod
+    def balanceWithdraw(id, prev_balance, withdraw):
+        try:
+            new_balance = prev_balance - withdraw
+            rows = app.db.execute("""
+UPDATE users SET balance=:balance
+WHERE users.id=:id
+RETURNING id
+""",
+                    balance=new_balance, id=id)
+            id = rows[0][0]
+            return User.get(id)
+        except Exception as e:
+            print(str(e))
+            return None
+            
+            
+    @staticmethod
     @login.user_loader
     def get(id):
         rows = app.db.execute("""

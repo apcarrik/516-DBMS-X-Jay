@@ -73,8 +73,16 @@ def buildEditProfileForm(id,Pemail,Pfirstname,Plastname,Paddress):
 
 class BalanceTopupForm(FlaskForm):
     topup = IntegerField('Topup(0-10000)', default=10,validators=[NumberRange(min=0, max=10000)])
-    submit = SubmitField('Update')
+    submit = SubmitField('Process')
 
+def buildBalanceWithdrawForm(balance):
+    class balanceWithdrawForm(FlaskForm):
+        fieldStr = 'Withdraw(0-'+str(balance)+')'
+        withdraw = IntegerField(fieldStr, default=0,validators=[NumberRange(min=0, max=balance)])
+        submit = SubmitField('Process')
+    return balanceWithdrawForm()
+        
+        
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
@@ -128,9 +136,22 @@ def balanceTopup():
     form = BalanceTopupForm()
     if form.validate_on_submit():
         if User.balanceTopup(info.id, info.balance, form.topup.data):
-            flash('Edit success!')
+            flash('Topup succeed!')
             return redirect(url_for('users.profile'))
     return render_template('balanceTopup.html',title='balance topup',form=form)
+    
+@bp.route('/balancewithdraw', methods=['GET','POST'])
+def balanceWithdraw():
+    info = User.get(current_user.id)
+    if info is None:
+        return redirect(url_for('users.login'))
+    form = buildBalanceWithdrawForm(info.balance)
+    if form.validate_on_submit():
+        if User.balanceWithdraw(info.id, info.balance, form.withdraw.data):
+            flash('Withdraw succeed!')
+            return redirect(url_for('users.profile'))
+    return render_template('balanceWithdraw.html',title='balance withdraw',form=form)
+        
 
 @bp.route('/<variable>/publicProfile', methods=['GET','POST'])
 def publicProfile(variable):
