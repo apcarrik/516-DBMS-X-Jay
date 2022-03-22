@@ -24,10 +24,15 @@
   </tbody>
 </table>
 
+{% if sellers|length != 0 %}
 <h4>Sellers:</h4>
 {% for seller in sellers %}
 <a href= "{{url_for('users.publicProfile',variable=seller[0]) }}">{{seller[1]}} {{seller[2]}}</a>
 {% endfor %}
+
+{% else %}
+<h4> Does not belong to any seller </h4>
+{% endif %}
 
 <br><br>
 
