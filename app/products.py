@@ -18,3 +18,8 @@ def details(pid):# get all available products for sale:
 def cart():# get all available products for sale:
     # TODO: get products & quantities in user's cart
     return render_template('cart.html', cart = [])
+    
+@bp.route('/addtocart/<sid>/<pid>', methods=['GET', 'POST'])
+def addToCart(sid,pid):
+    #TODO: to implement an interface to add # quantities of product(pid) from the seller(sid) to cart
+    return render_template('addToCart.html', sid=sid, pid=pid)
