@@ -50,9 +50,9 @@ RETURNING id
             return None
 
     @staticmethod
-    def getSellers(pid):
+    def getSellerInfo(pid):
         rows = app.db.execute('''
-SELECT users.id, users.firstname, users.lastname
+SELECT users.id, users.firstname, users.lastname, inventory.price, inventory.quantity
 FROM inventory, users
 WHERE inventory.pid = :id AND inventory.sid = users.id
 ''',

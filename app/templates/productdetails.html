@@ -24,11 +24,28 @@
   </tbody>
 </table>
 
-{% if sellers|length != 0 %}
+{% if seller_info|length != 0 %}
 <h4>Sellers:</h4>
-{% for seller in sellers %}
-<a href= "{{url_for('users.publicProfile',variable=seller[0]) }}">{{seller[1]}} {{seller[2]}}</a>
-{% endfor %}
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Price</th>
+      <th scope="col">Available Qt.</th>
+      <th scope="col"> </th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for seller in seller_info %}
+    <tr>
+        <td><a href= "{{url_for('users.publicProfile',variable=seller[0]) }}">{{seller[1]}} {{seller[2]}} </a> </td>
+        <td> {{seller[3]}} </td>
+        <td> {{seller[4]}} </td>
+        <td> IntegerField for Qt. & Cart button? </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
 
 {% else %}
 <h4> Does not belong to any seller </h4>
