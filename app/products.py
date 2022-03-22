@@ -10,3 +10,8 @@ bp = Blueprint('products', __name__)
 def details(pid):# get all available products for sale:
     product = Product.get(pid)
     return render_template('productdetails.html', avail_products = [product])
+
+@bp.route('/cart', methods=['GET', 'POST'])
+def cart():# get all available products for sale:
+    # TODO: get products & quantities in user's cart
+    return render_template('cart.html', cart = [])
