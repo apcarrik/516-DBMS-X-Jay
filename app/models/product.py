@@ -48,3 +48,13 @@ RETURNING id
             # the following simply prints the error to the console:
             print(str(e))
             return None
+
+    @staticmethod
+    def getSellers(pid):
+        rows = app.db.execute('''
+SELECT users.id, users.firstname, users.lastname
+FROM inventory, users
+WHERE inventory.pid = :id AND inventory.sid = users.id
+''',
+                              id=pid)
+        return rows if rows is not None else None
