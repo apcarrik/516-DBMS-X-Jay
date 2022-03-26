@@ -2,8 +2,7 @@
 
 {% block content %}
 
-<h1>Register</h1>
-
+<h1>Edit Your Info:</h1>
 <form action="" method="post">
   {{ form.hidden_tag() }}
   <p>
@@ -48,15 +47,13 @@
     <span style="color: red;">[{{ error }}]</span>
     {% endfor %}
   </p>
-  <p>
-    {{ form.balance.label }}<br/>
-    {{ form.balance(size=10) }}<br/>
-    {% for error in form.balance.errors %}
-    <span style="color: red;">[{{ error }}]</span>
-    {% endfor %}
-  </p>
+
   
   <p>{{ form.submit() }}</p>
 </form>
 
+
+
 {% endblock %}
+
+
