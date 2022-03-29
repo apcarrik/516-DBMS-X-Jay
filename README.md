@@ -2,8 +2,13 @@ This course project is intended as a 'standard option'.
 
 Created by [Rickard Stureborg](http://www.rickard.stureborg.com) and [Yihao Hu](https://www.linkedin.com/in/yihaoh/) for CS316, adapted for CS516.
 
-## SQL change
-PLEASE READ db/create.sql FIRST TO CHANGE YOUR DATABASE
+## SQL change VERY IMPORTANT!!
+PLEASE READ db/create.sql & db/load.sql FIRST TO CHANGE YOUR DATABASE
+If your existing DB tables have conflicts, you may DROP all your tables, then create new tables by:
+1. In your /db file folder , run the command line: 
+psql -af create.sql amazon
+2. In your /db/data file folder, run the command line:
+psql -af ../load.sql amazon
 
 ## Running/Stopping the Website
 
