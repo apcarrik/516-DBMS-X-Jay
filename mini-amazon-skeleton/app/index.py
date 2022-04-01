@@ -12,7 +12,8 @@ bp = Blueprint('index', __name__)
 
 
 class SearchForm(FlaskForm):
-    searchkeyword = StringField('Keywords')
+    namekeyword = StringField('Name Keyword')
+    categorykeyword = StringField('Category Keyword')
     submit = SubmitField('Search')
 
 
@@ -29,7 +30,9 @@ def index():
         purchases = None
     # render the page by adding information to the index.html file
     if form.validate_on_submit():
-        products = Product.get_matching_keyword(keyword=form.searchkeyword.data,available=True)
+        products = Product.get_matching_keyword(namekeyword=form.namekeyword.data,
+                                                categorykeyword=form.categorykeyword.data,
+                                                available=True)
         return render_template('index.html',
                            avail_products=products,
                            purchase_history=purchases, 
