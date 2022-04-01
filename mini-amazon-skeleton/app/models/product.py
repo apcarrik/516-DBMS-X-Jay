@@ -51,7 +51,7 @@ RETURNING id
     @staticmethod
     def getSellerInfo(pid):
         rows = app.db.execute('''
-SELECT users.id, users.firstname, users.lastname, inventory.price, inventory.quantity
+SELECT users.id, users.firstname, users.lastname, inventory.price, inventory.quantity, inventory.description
 FROM inventory, users
 WHERE inventory.pid = :id AND inventory.sid = users.id
 ''',
