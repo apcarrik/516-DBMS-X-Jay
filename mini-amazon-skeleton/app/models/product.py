@@ -32,14 +32,14 @@ GROUP BY Products.id
         return [Product(*row) for row in rows]
 
     @staticmethod
-    def get_matching_keyword(namekeyword, categorykeyword, available=True):
-        rows = app.db.execute('''
+    def get_matching_keyword(namekeyword, categorykeyword, ordering, available=True):
+        rows = app.db.execute(f'''
 SELECT Products.id, Products.name, Products.available, Products.category, MIN(Inventory.price) as minprice
 FROM Products, Inventory
-WHERE Products.available = :available and Inventory.pid=Products.id and Products.name LIKE :namekeyword and Products.category LIKE :categorykeyword
+WHERE Products.available = '{available}' and Inventory.pid=Products.id and Products.name LIKE '{"%"+namekeyword+"%"}' and Products.category LIKE '{"%"+categorykeyword+"%"}'
 GROUP BY Products.id
-''',
-                              namekeyword=f"%{namekeyword}%", categorykeyword=f"%{categorykeyword}%", available=available)
+ORDER BY {ordering}
+''')
         return [Product(*row) for row in rows]
         
 

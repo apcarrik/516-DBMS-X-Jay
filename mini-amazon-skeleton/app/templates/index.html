@@ -5,18 +5,25 @@
 <br><br>
 
 <form action="" method="post" novalidate>
-  {{ form.hidden_tag() }}
+  {{ searchform.hidden_tag() }}
   <p>
-    {{ form.namekeyword.label }}<br/>
-    {{ form.namekeyword(size=32) }}<br/>
-    {% for error in form.namekeyword.errors %}
+    {{ searchform.namekeyword.label }}<br/>
+    {{ searchform.namekeyword(size=32) }}<br/>
+    {% for error in searchform.namekeyword.errors %}
     <span style="color: red;">[{{ error }}]</span>
     {% endfor %}
   </p>
   <p>
-    {{ form.categorykeyword.label }}<br/>
-    {{ form.categorykeyword(size=32) }}<br/>
-    {% for error in form.categorykeyword.errors %}
+    {{ searchform.categorykeyword.label }}<br/>
+    {{ searchform.categorykeyword(size=32) }}<br/>
+    {% for error in searchform.categorykeyword.errors %}
+    <span style="color: red;">[{{ orderingerror }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ searchform.sortfield.label }}<br/>
+    {{ searchform.sortfield() }}<br/>
+    {% for error in searchform.sortfield.errors %}
     <span style="color: red;">[{{ error }}]</span>
     {% endfor %}
   </p>
@@ -31,7 +38,7 @@
     {% endif %}
     {% endwith %}
   </p>
-  {{ form.submit(class_="btn btn-black") }}
+  {{ searchform.submit(class_="btn btn-black") }}
 </form>
 
 <h2>Products for sale:</h2>
