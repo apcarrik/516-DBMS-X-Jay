@@ -2,11 +2,12 @@ from flask import current_app as app
 
 
 class Product:
-    def __init__(self, id, name, available, category):
+    def __init__(self, id, name, available, category, minprice=None):
         self.id = id
         self.name = name
         self.available = available
         self.category = category
+        self.minprice = minprice
 
 
     @staticmethod
@@ -22,9 +23,10 @@ WHERE id = :id
     @staticmethod
     def get_all(available=True):
         rows = app.db.execute('''
-SELECT id, name, available, category
-FROM Products
-WHERE available = :available
+SELECT Products.id, Products.name, Products.available, Products.category, MIN(Inventory.price) as minprice
+FROM Products, Inventory
+WHERE Products.available = :available and Inventory.pid=Products.id
+GROUP BY Products.id
 ''',
                               available=available)
         return [Product(*row) for row in rows]
