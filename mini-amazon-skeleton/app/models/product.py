@@ -30,6 +30,17 @@ GROUP BY Products.id
 ''',
                               available=available)
         return [Product(*row) for row in rows]
+
+    @staticmethod
+    def get_matching_keyword(keyword, available=True):
+        rows = app.db.execute('''
+SELECT Products.id, Products.name, Products.available, Products.category, MIN(Inventory.price) as minprice
+FROM Products, Inventory
+WHERE Products.available = :available and Inventory.pid=Products.id and Products.name LIKE :keyword
+GROUP BY Products.id
+''',
+                              keyword=f"%{keyword}%", available=available)
+        return [Product(*row) for row in rows]
         
 
     @staticmethod
