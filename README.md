@@ -5,9 +5,9 @@ Created by [Rickard Stureborg](http://www.rickard.stureborg.com) and [Yihao Hu](
 ## SQL change VERY IMPORTANT!!
 PLEASE READ db/create.sql & db/load.sql FIRST TO CHANGE YOUR DATABASE
 If your existing DB tables have conflicts, you may DROP all your tables, then create new tables by:
-1. In your /db file folder , run the command line: 
+1. In your **/db** folder , run the command line: 
 psql -af create.sql amazon
-2. In your /db/data file folder, run the command line:
+2. In your **/db/data** folder, run the command line:
 psql -af ../load.sql amazon
 
 ## Running/Stopping the Website

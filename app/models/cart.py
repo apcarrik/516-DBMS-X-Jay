@@ -1,4 +1,5 @@
 from flask import current_app as app
+from .user import User
 
 
 class Cart:
@@ -23,4 +24,25 @@ WHERE cart.uid = :uid AND cart.pid=products.id
 ''',
                               uid=uid)
         return [Cart(*row) for row in rows] if rows is not None else None
+        
+    @staticmethod
+    def checkout(uid):
+        cart = Cart.get(uid)
+        totalprice = 0
+        for cartItem in cart:
+            checkQt = app.db.execute('''
+SELECT inventory.quantity
+FROM inventory
+WHERE  inventory.pid=:pid AND inventory.sid=:sid
+        AND inventory.quantity >= :quantity
+''',        pid=cartItem.pid, sid=cartItem.sid, quantity=cartItem.quantity)
+            if not checkQt:
+                return "Sorry, no enough quantity for "+str(cartItem.productname)+" from "+ str(cartItem.sellerfirstname)+" "+str(cartItem.sellerlastname)
+            totalprice += cartItem.quantity * cartItem.unitprice
+        balance = User.get(uid).balance
+        if balance < totalprice:
+            return "Sorry, no enough balance on your account to pay"
+            
+        # TODO DB for real purchase. only validation for now
+        return "success"
 

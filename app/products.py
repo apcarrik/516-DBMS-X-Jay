@@ -41,6 +41,20 @@ def addToCart(sid,pid):
             return redirect(url_for('products.details',pid=pid))
     return render_template('addToCart.html',title='Add to cart',form=form)
     
+@bp.route('/checkoutCart', methods=['GET', 'POST'])
+def checkoutCart():
+    if not current_user.is_authenticated:
+        return redirect(url_for('users.login'))
+        
+    result = Cart.checkout(current_user.id)
+    if result=='success':
+        # TODO change flash message & add DB logic
+        flash('Validation success! Available Qt & your money are sufficient (real purchase not implemented) ')
+    else:
+        flash(result)
+    cart = Cart.get(current_user.id)
+    return render_template('cart.html',cart=cart)
+    
 
 
     
