@@ -21,6 +21,16 @@ WHERE id = :id
         return Product(*(rows[0])) if rows is not None else None
 
     @staticmethod
+    def get_by_name(name):
+        rows = app.db.execute('''
+SELECT id, name, available, category
+FROM Products
+WHERE name = :name
+''',
+                              name=name)
+        return Product(*(rows[0])) if rows is not None else None
+
+    @staticmethod
     def get_all(available=True):
         rows = app.db.execute('''
 SELECT Products.id, Products.name, Products.available, Products.category, MIN(Inventory.price) as minprice
@@ -44,22 +54,19 @@ ORDER BY {ordering}
         
 
     @staticmethod
-    def add_product(name, price):
+    def add_product(name, category):
         try:
             rows = app.db.execute("""
-INSERT INTO Products(name, price, available)
-VALUES(:name, :price, true)
+INSERT INTO Products(name, available, category)
+VALUES(:name, true, :category)
 RETURNING id
 """,
                                   name = name,
-                                  price = price)
+                                  category = category)
             id = rows[0][0]
             return Product.get(id)
         except Exception as e:
-            # likely product already exist; better error checking and reporting needed;
-            # the following simply prints the error to the console:
-            print(str(e))
-            return None
+            return Product.get_by_name(name)
 
     @staticmethod
     def getSellerInfo(pid):
@@ -70,3 +77,29 @@ WHERE inventory.pid = :id AND inventory.sid = users.id
 ''',
                               id=pid)
         return rows if rows is not None else None
+        
+    @staticmethod
+    def addToCart(uid,pid,sid,quantity):
+        existQt = app.db.execute('''
+SELECT quantity FROM Cart
+WHERE uid=:uid AND pid=:pid AND sid=:sid
+''',
+                uid=uid, pid=pid, sid=sid)
+        if len(existQt) > 0:
+            newQt = existQt[0][0] + quantity
+            rows = app.db.execute('''
+    UPDATE Cart
+    SET quantity = :newQt
+    WHERE uid=:uid AND pid=:pid AND sid=:sid
+    RETURNING pid
+    ''',
+                newQt=newQt, uid=uid, pid=pid, sid=sid)
+            return rows[0] if rows is not None else None
+            
+        else:
+            rows = app.db.execute('''
+    INSERT INTO Cart(uid, pid, sid, quantity)
+    VALUES(:uid, :pid, :sid, :quantity)
+    RETURNING pid
+    ''',            uid=uid, pid=pid, sid=sid,quantity=quantity)
+            return rows[0] if rows is not None else None
