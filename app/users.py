@@ -6,7 +6,9 @@ from wtforms import StringField, IntegerField,PasswordField, BooleanField, Submi
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo,NumberRange
 
 from .models.user import User
+from .models.purchase import Purchase
 from werkzeug.datastructures import MultiDict
+import datetime
 
 from flask import Blueprint
 bp = Blueprint('users', __name__)
@@ -109,7 +111,10 @@ def profile():
     info = User.get(current_user.id)
     if info is None:
         return redirect(url_for('users.login'))
-    return render_template('profile.html',title='profile_title',userinfo=info)
+        
+    purchases = Purchase.get_all_by_uid_since(
+            current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
+    return render_template('profile.html',title='profile_title',userinfo=info, purchase_history=purchases)
     
         
 @bp.route('/editprofile', methods=['GET', 'POST'])

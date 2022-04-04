@@ -3,6 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import IntegerField, SubmitField
 from .models.product import Product
 from .models.cart import Cart
+from .models.purchase import OrderDetail
 from wtforms.validators import ValidationError, DataRequired, NumberRange
 from flask_login import current_user
 
@@ -52,6 +53,16 @@ def checkoutCart():
         flash(result)
     cart = Cart.get(current_user.id)
     return render_template('cart.html',cart=cart)
+    
+@bp.route('/orderdetail/<orderid>', methods=['GET', 'POST'])
+def orderDetail(orderid):
+    uid, orderDetail = OrderDetail.getOrderDetail(orderid)
+    
+    if current_user.id != uid:
+        flash("Sorry, you don't have access to this order")
+        return redirect(url_for('index.index'))
+    return render_template('orderDetail.html',title='Order Detail', orderid=orderid, orderDetail=orderDetail)
+
     
 
 
