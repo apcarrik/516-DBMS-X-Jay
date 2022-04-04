@@ -49,7 +49,7 @@ def checkoutCart():
     result = Cart.checkout(current_user.id)
     if result=='success':
         # TODO change flash message & add DB logic
-        flash('Validation success! Available Qt & your money are sufficient (real purchase not implemented) ')
+        flash('~Purchase success~')
     else:
         flash(result)
     cart = Cart.get(current_user.id)
