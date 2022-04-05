@@ -32,11 +32,6 @@ def index():
     products = Product.get_all(available=True)
     searchform = SearchForm()
     # find the products current user has bought:
-    if current_user.is_authenticated:
-        purchases = Purchase.get_all_by_uid_since(
-            current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
-    else:
-        purchases = None
     # render the page by adding information to the index.html file
     if searchform.validate_on_submit():
         products = Product.get_matching_keyword(namekeyword=searchform.namekeyword.data,
@@ -45,9 +40,7 @@ def index():
                                                 available=True)
         return render_template('index.html',
                            avail_products=products,
-                           purchase_history=purchases, 
                            searchform=searchform)
     return render_template('index.html',
                            avail_products=products,
-                           purchase_history=purchases, 
                            searchform=searchform)

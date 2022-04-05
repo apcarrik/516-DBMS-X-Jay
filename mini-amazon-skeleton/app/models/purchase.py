@@ -2,11 +2,12 @@ from flask import current_app as app
 
 
 class Purchase:
-    def __init__(self, id, uid, pid, time_purchased):
-        self.id = id
-        self.uid = uid
-        self.pid = pid
+    def __init__(self, orderid, totalprice, totalQt, time_purchased, isFulfill):
+        self.orderid = orderid
+        self.totalprice = totalprice
+        self.totalQt = totalQt
         self.time_purchased = time_purchased
+        self.isFulfill = isFulfill
 
     @staticmethod
     def get(id):
@@ -21,12 +22,42 @@ WHERE id = :id
     @staticmethod
     def get_all_by_uid_since(uid, since):
         rows = app.db.execute('''
-SELECT id, uid, pid, time_purchased
+SELECT id, SUM(finalprice*quantity),SUM(quantity), MAX(time_purchased) as time, EVERY(fulfillstate)
 FROM Purchases
-WHERE uid = :uid
-AND time_purchased >= :since
-ORDER BY time_purchased DESC
+WHERE uid = :uid AND time_purchased >= :since
+GROUP BY id
+ORDER BY time DESC
 ''',
-                              uid=uid,
-                              since=since)
+            uid=uid, since=since)
         return [Purchase(*row) for row in rows]
+  
+  
+  
+
+
+class OrderDetail:
+    def __init__(self, pid, productname, sid, sellerlastname, sellerfirstname,  quantity, final_unitprice, fulfilled):
+        self.pid = pid
+        self.productname = productname
+        self.sid = sid
+        self.sellerlastname = sellerlastname
+        self.sellerfirstname = sellerfirstname
+        self.quantity = quantity
+        self.final_unitprice = final_unitprice
+        self.fulfilled = fulfilled
+
+    @staticmethod
+    def getOrderDetail(orderid):
+        uidRow = app.db.execute('''
+SELECT MAX(uid) FROM purchases
+WHERE id=:id GROUP BY id
+''',     id=orderid)
+
+        orderRows = app.db.execute('''
+SELECT purchases.pid, products.name, purchases.sid, users.lastname, users.firstname, purchases.quantity, purchases.finalprice, purchases.fulfillstate
+FROM purchases, products, users
+WHERE purchases.id=:orderid
+AND products.id=purchases.pid
+AND users.id=purchases.uid
+''',        orderid=orderid)
+        return uidRow[0][0], [OrderDetail(*row) for row in orderRows]
