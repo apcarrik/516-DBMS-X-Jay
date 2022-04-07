@@ -8,6 +8,15 @@ If you have a different setup, your mileage with the following instructions may 
 
 **Please check the standard project & the mini amazon set up help documents prior to reading.**
 
+## SQL change VERY IMPORTANT!!
+PLEASE READ db/create.sql & db/load.sql FIRST TO CHANGE YOUR DATABASE
+If your existing DB tables have conflicts, you may DROP all your tables, then create new tables by:
+1. In your **/db** folder , run the command line: 
+psql -af create.sql amazon
+2. In your **/db/data** folder, run the command line:
+2.1  psql -af ../load.sql amazon
+2.2  psql -af ../load_feedback.sql amazon
+
 ## Installing the Current Skeleton
 
 1. Fork this repo by clicking the small 'Fork' button at the very top right on Gitlab.

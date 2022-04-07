@@ -134,3 +134,38 @@ WHERE id = :id
 """,
                               id=id)
         return User(*(rows[0])) if rows else None
+        
+    @staticmethod
+    def get_by_purchase_id(purchase_id):
+        rows = app.db.execute("""
+SELECT DISTINCT users.id, email, firstname, lastname, address, balance
+FROM users
+JOIN purchases
+ON purchases.uid = users.id AND purchases.id = :purchase_id
+""",
+                              purchase_id = purchase_id)
+        if rows:
+            ans = User(*(rows[0]))
+            ans.id = -1
+            ans.email = ""
+            ans.balance = -1
+            return ans
+        return None
+        
+class SellerFeedback:
+    def __init__(self, uid, sid, rating, review, time_submitted, vote):
+        self.uid = uid
+        self.sid = sid
+        self.rating = rating
+        self.review = review
+        self.time_submitted = time_submitted
+        self.vote = vote
+    
+    @staticmethod
+    def getFeedback(sid):
+        rows = app.db.execute('''
+SELECT * FROM seller_feedback
+WHERE sid = :sid
+    ''',    sid=sid)
+        return [SellerFeedback(*row) for row in rows]
+    
