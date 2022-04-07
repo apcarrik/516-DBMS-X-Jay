@@ -113,6 +113,7 @@ WHERE uid=:uid AND pid=:pid AND sid=:sid
                 uid=uid, pid=pid, sid=sid)
         return deletequery if deletequery is not None else None
 
+    @staticmethod
     def update_product_description(pid, sid, description):
         rows = app.db.execute(f"""
 UPDATE Inventory
@@ -121,3 +122,13 @@ WHERE pid={pid} AND sid={sid}
 RETURNING pid
 """)
         return None
+
+    @staticmethod
+    def update_quantity_in_cart(uid, pid, sid, quantity):
+        updatequery = app.db.execute('''
+UPDATE Cart
+SET quantity = :newQty
+WHERE uid=:uid AND pid=:pid AND sid=:sid
+''',
+                uid=uid, pid=pid, sid=sid, newQty=quantity)
+        return updatequery if updatequery is not None else None
